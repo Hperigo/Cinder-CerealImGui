@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cinder>
+<block
+	name="CerealImGui"
+	id="ocornut.imgui"
+	author="Henrique Périgo"
+	summary="Bridge between ImGui and Cereal"
+	license="MIT License"
+	git="none"
+	>	
+	<includePath>include</includePath>
+	
+	<header>include/CinderCerealImGui.h</header>
+
+	
+</block>
+</cinder>
