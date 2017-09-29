@@ -32,14 +32,14 @@ Simple simpleObject;
 
 void CinderApp::draw()
 {
-    cereal::ImGuiArchive uiAr;
-    uiAr(simpleObject);
+    cereal::ImGuiArchive uiArchive;
+    uiArchive(simpleObject);
     
 }
 ```
 
 suports drawing float, int, bool, string ( buggy), glm::vec2, glm::vec3, glm::quat
-
+![Alt text](/img.jpg?raw=true "example")
 
 ### TODO:
 1. fix bug in std::string input

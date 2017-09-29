@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <cinder>
 <block
-	name="CerealImGui"
-	id="ocornut.imgui"
+	name="Cinder-CerealImGui"
+	id="hperigo.cerealImgui"
 	author="Henrique Périgo"
 	summary="Bridge between ImGui and Cereal"
 	license="MIT License"
-	git="none"
-	>	
+	git="https://github.com/Hperigo/Cinder-CerealImGui"
+	>
+
+	<requires>sg.cinder.cereal</requires>
+	<requires>ocornut.imgui</requires>
+
+
 	<includePath>include</includePath>
 	
 	<header>include/CinderCerealImGui.h</header>
