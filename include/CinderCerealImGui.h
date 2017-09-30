@@ -23,6 +23,70 @@ namespace cereal {
     
     class ImGuiArchive : public InputArchive<ImGuiArchive>, public traits::TextArchive{
     public:
+        
+        class Options{
+            
+        public:
+            
+            Options(){
+                
+            }
+            ~Options(){
+                
+            }
+            
+            Options(float _min, float _max, float _stepAmt  ) : mMin(_min), mMax(_max), mStepAmt(_stepAmt){
+                mHasStep = false;
+                mHasMinMax = true;
+            }
+            
+            
+            Options& setMinMax(float _min, float _max ){
+                mMin = _min;
+                mMax = _max;
+                mHasMinMax = false;
+                return *this;
+            }
+            
+            
+            Options& setStep( float amt ){
+                mStepAmt = amt;
+                return *this;
+            }
+            
+            float getMin(){
+                return mMin;
+            }
+            
+            float getMax(){
+                return mMax;
+            }
+            
+            float getStep(){
+                return mStepAmt;
+            }
+            
+            
+            bool hasStep(){
+                return mHasStep;
+            }
+            
+            bool hasMinMax(){
+                return mHasMinMax;
+            }
+            
+            
+        private:
+            
+            float mStepAmt = 0.1;
+            bool mHasStep = true;
+
+            float mMin = 0;
+            float mMax = 10.0;
+            bool mHasMinMax = false;
+            
+        };
+        
         ImGuiArchive(  ) : InputArchive<ImGuiArchive>(this){
             
             
@@ -34,39 +98,75 @@ namespace cereal {
         
         template <class T> inline
         void draw(const char * name, T & value){
-            draw(name, value);
+            
+            auto opt = mElementOptions[name];
+            
+            draw(name, value, opt);
         }
         
         
-        void draw(const char * name, int & value){
-            ui::DragInt(name, &value);
+        void draw(const char * name, int & value, Options opt = Options() ){
+            
+            
+            if(opt.hasStep()){
+                ui::DragInt(name, &value, opt.getStep() );
+            }
+            else if(opt.hasMinMax()){
+                ui::DragInt(name, &value, opt.getStep(), opt.getMin(), opt.getMax() );
+            }else{
+                ui::DragInt(name, &value);
+            }
         }
         
-        void draw(const char * name, float & value){
-            ui::DragFloat(name, &value);
+        void draw(const char * name, float & value, Options opt = Options()){
+            if(opt.hasStep()){
+                ui::DragFloat(name, &value, opt.getStep() );
+            }
+            else if(opt.hasMinMax()){
+                ui::DragFloat(name, &value, opt.getStep(), opt.getMin(), opt.getMax() );
+            }else{
+                ui::DragFloat(name, &value);
+            }
         }
         
-        void draw(const char* name, bool& value){
+        void draw(const char* name, bool& value, Options opt = Options()){
             ui::Checkbox(name, &value);
         }
         
         
-        void draw(const char* name, std::string& value){
+        void draw(const char* name, std::string& value, Options opt = Options()){
             ui::InputText(name, &value[0], 1000);
             
         }
 
         
-        void draw(const char* name, glm::vec2& value){
-            ui::DragFloat2(name, &value[0]);
+        void draw(const char* name, glm::vec2& value, Options opt = Options()){
+            
+            if(opt.hasStep()){
+                ui::DragFloat2(name, &value[0], opt.getStep() );
+            }
+            else if(opt.hasMinMax()){
+                ui::DragFloat2(name, &value[0], opt.getStep(), opt.getMin(), opt.getMax() );
+            }else{
+                ui::DragFloat2(name, &value[0]);
+            }
         }
         
-        void draw(const char* name, glm::vec3& value){
-            ui::DragFloat3(name, &value[0]);
+        void draw(const char* name, glm::vec3& value,Options opt = Options()){
+            if(opt.hasStep()){
+                ui::DragFloat3(name, &value[0], opt.getStep() );
+            }
+            else if(opt.hasMinMax()){
+                ui::DragFloat3(name, &value[0], opt.getStep(), opt.getMin(), opt.getMax() );
+            }else{
+                ui::DragFloat3(name, &value[0]);
+            }
+            
+            
         }
         
         
-        void draw(const char* name, glm::quat& value){
+        void draw(const char* name, glm::quat& value, Options opt = Options()){
             
             glm::vec3 euler = glm::eulerAngles(value);
             
@@ -76,7 +176,18 @@ namespace cereal {
             
         }
         
+        void draw(const char* name, ci::Color& value, Options opt = Options()){
+            
+            ui::ColorPicker3(name, &value[0]);
+            
+        }
+        
+        void setOption(const std::string& elementName, const Options& opt ){
+            mElementOptions[elementName] = opt;
+        }
+        
         int elementCount = 0;
+        std::map<std::string, Options> mElementOptions;
     };
     
     
@@ -110,6 +221,15 @@ namespace cereal {
         ar.elementCount += 1;
         ar.draw<T>(t.name, t.value);
     }
+    
+    template <class T> inline
+    void CEREAL_LOAD_FUNCTION_NAME( ImGuiArchive & ar, NameValuePair<ci::Color> & t )
+    {
+        
+        ci::app::console() << "color..." << std::endl;
+        ar.elementCount += 1;
+        ar.draw<T>(t.name, t.value);
+    }
 
     
     template <class T, traits::EnableIf<std::is_arithmetic<T>::value> = traits::sfinae> inline
@@ -128,6 +248,17 @@ namespace cereal {
         std::string name = "." + std::to_string(ar.elementCount);
         ar.draw(name.c_str(), str);
     }
+    
+    template<class CharT, class Traits, class Alloc> inline
+    void CEREAL_LOAD_FUNCTION_NAME(ImGuiArchive & ar, ci::Color& c)
+    {
+        ci::app::console() << "color" << std::endl;
+        
+        ar.elementCount += 1;
+        std::string name = "." + std::to_string(ar.elementCount);
+        ar.draw(name.c_str(), c);
+    }
+    
 } // namespace cereal
 
 // register archives for polymorphic support
