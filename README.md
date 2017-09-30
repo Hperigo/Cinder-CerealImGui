@@ -4,7 +4,7 @@ Cinder-CerealImGui
 
 
 ##### How to use
-you need to define a serialize function in your object like so:
+you need to define a serialize function in your object:
 
 ```c++
 
@@ -39,7 +39,7 @@ void CinderApp::draw()
 ```
 
 suports drawing float, int, bool, string ( buggy), glm::vec2, glm::vec3, glm::quat
-![Alt text](/img.jpg?raw=true "example")
+![e](https://github.com/Hperigo/Cinder-CerealImGui/blob/master/example.png?raw=true "example")
 
 ### TODO:
 1. fix bug in std::string input
