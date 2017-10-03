@@ -21,7 +21,7 @@
 
 namespace cereal {
     
-    class ImGuiArchive : public InputArchive<ImGuiArchive>, public traits::TextArchive{
+    class ImGuiArchive : public InputArchive<ImGuiArchive>{
     public:
         
         class Options{
@@ -156,7 +156,15 @@ namespace cereal {
         
         
         void draw(const char* name, std::string& value, Options opt = Options()){
-            ui::InputText(name, &value[0], 1000);
+            
+            std::vector<char> charData(value.begin(), value.end());
+            charData.resize(1000);
+            
+            if( ui::InputText(name, &charData[0], charData.size()) ){
+                value = std::string(charData.data() );
+            }
+            
+            
         }
 
         
@@ -235,11 +243,11 @@ namespace cereal {
         ar.draw<T>("", t);
     }
 
-    template<class CharT, class Traits, class Alloc> inline
-    void CEREAL_LOAD_FUNCTION_NAME(ImGuiArchive & ar, std::basic_string<CharT, Traits, Alloc> & str)
-    {
-        ar.draw<std::string>("", str);
-    }
+//    template<class CharT, class Traits, class Alloc> inline
+//    void CEREAL_LOAD_FUNCTION_NAME(ImGuiArchive & ar, std::basic_string<CharT, Traits, Alloc> & str)
+//    {
+//        ar.draw<std::string>("", str);
+//    }
     
 } // namespace cereal
 
