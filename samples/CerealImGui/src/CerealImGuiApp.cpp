@@ -119,9 +119,6 @@ void CerealImGuiApp::draw()
         archive(simpleObject);
     }
     
-    
-    console() << simpleObject.mString << endl;
-    
 }
 
 CINDER_APP( CerealImGuiApp, RendererGl )

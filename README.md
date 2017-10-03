@@ -38,9 +38,6 @@ void CinderApp::draw()
 }
 ```
 
-suports drawing float, int, bool, string ( buggy), glm::vec2, glm::vec3, glm::quat
+suports drawing float, int, bool, std::string, glm::vec2, glm::vec3, glm::quat
 ![e](https://github.com/Hperigo/Cinder-CerealImGui/blob/master/example.png?raw=true "example")
 
-### TODO:
-1. fix bug in std::string input
-2. add more types?
